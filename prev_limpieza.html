@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Preventa - Productos de Limpieza</title>
+    <style>
+        :root {
+            --primary-color: #0077b6;
+            --secondary-color: #90e0ef;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f4f4f4;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            padding: 1rem;
+        }
+        
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        input[type="file"], 
+        button, 
+        select, 
+        input[type="text"],
+        input[type="number"] {
+            padding: 0.5rem;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #005f8b;
+        }
+        
+        button.secondary {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+        }
+        
+        button.secondary:hover {
+            background-color: #61d0e4;
+        }
+        
+        button.success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        button.success:hover {
+            background-color: #218838;
+        }
+        
+        button.danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        button.danger:hover {
+            background-color: #c82333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .search-bar {
+            margin-bottom: 1rem;
+            display: flex;
+        }
+        
+        .search-bar input {
+            flex-grow: 1;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-bar select {
+            flex-grow: 1;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-info {
+            flex-grow: 1;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cart-item-actions input {
+            width: 60px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-control button {
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+        }
+        
+        .tab-container {
+            margin-bottom: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
+            margin-right: 0.5rem;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-color: #ddd;
+            margin-bottom: -1px;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 0.3rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema de Preventa de Productos de Limpieza</h1>
+    </header>
+    
+    <main>
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="catalogo">Catálogo</div>
+                <div class="tab" data-tab="carrito">Carrito</div>
+                <div class="tab" data-tab="historial">Historial</div>
+                <div class="tab" data-tab="configuracion">Configuración</div>
+            </div>
+            
+            <!-- Catálogo de productos -->
+            <div class="tab-content active" id="catalogo">
+                <div class="card">
+                    <h2 class="card-title">Catálogo de Productos</h2>
+                    
+                    <div class="filter-bar">
+                        <div class="search-bar">
+                            <input type="text" id="searchProduct" placeholder="Buscar producto...">
+                        </div>
+                        <select id="filterRubro">
+                            <option value="">Todos los rubros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="productTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Rubro</th>
+                                    <th>Precio</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <!-- Los productos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carrito de compras -->
+            <div class="tab-content" id="carrito">
+                <div class="card">
+                    <h2 class="card-title">Carrito de Compra</h2>
+                    
+                    <div id="cartItems">
+                        <!-- Los elementos del carrito se cargarán aquí -->
+                        <div class="empty-cart">No hay productos en el carrito</div>
+                    </div>
+                    
+                    <div class="cart-total">
+                        Total: $<span id="cartTotal">0.00</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientName">Nombre del cliente:</label>
+                        <input type="text" id="clientName" placeholder="Ingresar nombre del cliente">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientPhone">Teléfono (WhatsApp):</label>
+                        <input type="text" id="clientPhone" placeholder="Ingresar número con código de área">
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="success" id="sendOrderBtn">Enviar Pedido por WhatsApp</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="danger" id="clearCartBtn">Vaciar Carrito</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historial de pedidos -->
+            <div class="tab-content" id="historial">
+                <div class="card">
+                    <h2 class="card-title">Historial de Pedidos</h2>
+                    
+                    <div class="table-container">
+                        <table id="orderHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderHistoryTableBody">
+                                <!-- Los pedidos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Configuración -->
+            <div class="tab-content" id="configuracion">
+                <div class="card">
+                    <h2 class="card-title">Importar Catálogo</h2>
+                    
+                    <div class="form-group">
+                        <label for="catalogFile">Seleccionar archivo Excel:</label>
+                        <input type="file" id="catalogFile" accept=".xlsx, .xls, .csv">
+                    </div>
+                    
+                    <div class="form-group">
+                        <button id="importCatalogBtn">Importar Catálogo</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">Respaldar Datos</h2>
+                    
+                    <div class="form-group">
+                        <button id="exportDataBtn">Exportar Datos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Estado global de la aplicación
+        const state = {
+            products: [],
+            cart: [],
+            orders: [],
+            activeTab: 'catalogo'
+        };
+
+        // Funciones de utilidad
+        function formatCurrency(amount) {
+            return parseFloat(amount).toFixed(2);
+        }
+
+        function saveState() {
+            localStorage.setItem('preventa_products', JSON.stringify(state.products));
+            localStorage.setItem('preventa_cart', JSON.stringify(state.cart));
+            localStorage.setItem('preventa_orders', JSON.stringify(state.orders));
+        }
+
+        function loadState() {
+            try {
+                // Intentar cargar productos desde catalogo_productos.json primero
+                fetch('catalogo_productos.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Catálogo cargado desde archivo JSON:', data);
+                        state.products = data;
+                        
+                        // Después de cargar desde el archivo, verificar si hay datos en localStorage
+                        const savedProducts = localStorage.getItem('preventa_products');
+                        if (savedProducts) {
+                            state.products = JSON.parse(savedProducts);
+                        }
+                        
+                        const savedCart = localStorage.getItem('preventa_cart');
+                        if (savedCart) {
+                            state.cart = JSON.parse(savedCart);
+                        }
+                        
+                        const savedOrders = localStorage.getItem('preventa_orders');
+                        if (savedOrders) {
+                            state.orders = JSON.parse(savedOrders);
+                        }
+                        
+                        updateUI();
+                    })
+                    .catch(error => {
+                        console.error('Error cargando catálogo:', error);
+                        
+                        // Si falla la carga del archivo, intentar desde localStorage
+                        const savedProducts = localStorage.getItem('preventa_products');
+                        if (savedProducts) {
+                            state.products = JSON.parse(savedProducts);
+                        }
+                        
+                        const savedCart = localStorage.getItem('preventa_cart');
+                        if (savedCart) {
+                            state.cart = JSON.parse(savedCart);
+                        }
+                        
+                        const savedOrders = localStorage.getItem('preventa_orders');
+                        if (savedOrders) {
+                            state.orders = JSON.parse(savedOrders);
+                        }
+                        
+                        updateUI();
+                    });
+            } catch (error) {
+                console.error('Error cargando estado:', error);
+            }
+        }
+
+        // Funciones de UI
+        function updateUI() {
+            updateProductsTable();
+            updateRubroFilter();
+            updateCart();
+            updateOrderHistory();
+        }
+
+        function updateProductsTable() {
+            const tableBody = document.getElementById('productTableBody');
+            const searchText = document.getElementById('searchProduct').value.toLowerCase();
+            const rubroFilter = document.getElementById('filterRubro').value;
+            
+            tableBody.innerHTML = '';
+            
+            const filteredProducts = state.products.filter(product => {
+                const matchesSearch = 
+                    product.codigo?.toString().toLowerCase().includes(searchText) ||
+                    product.nombre?.toLowerCase().includes(searchText);
+                const matchesRubro = !rubroFilter || product.rubro === rubroFilter;
+                return matchesSearch && matchesRubro;
+            });
+            
+            if (filteredProducts.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="5" style="text-align: center;">No se encontraron productos</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.codigo || '-'}</td>
+                    <td>${product.nombre || '-'}</td>
+                    <td>${product.rubro || '-'}</td>
+                    <td>$${formatCurrency(product.precio || 0)}</td>
+                    <td>
+                        <button class="add-to-cart" data-id="${product.codigo}">Agregar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                
+                // Añadir evento al botón de agregar al carrito
+                row.querySelector('.add-to-cart').addEventListener('click', () => {
+                    addToCart(product);
+                });
+            });
+        }
+
+        function updateRubroFilter() {
+            const filterSelect = document.getElementById('filterRubro');
+            const currentValue = filterSelect.value;
+            
+            // Limpiar opciones actuales
+            filterSelect.innerHTML = '<option value="">Todos los rubros</option>';
+            
+            // Obtener rubros únicos
+            const rubros = [...new Set(state.products.map(p => p.rubro).filter(r => r))];
+            
+            // Añadir opciones al select
+            rubros.sort().forEach(rubro => {
+                const option = document.createElement('option');
+                option.value = rubro;
+                option.textContent = rubro;
+                filterSelect.appendChild(option);
+            });
+            
+            // Restaurar valor seleccionado si existe
+            if (currentValue && rubros.includes(currentValue)) {
+                filterSelect.value = currentValue;
+            }
+        }
+
+        function addToCart(product) {
+            const existingItem = state.cart.find(item => item.codigo === product.codigo);
+            
+            if (existingItem) {
+                existingItem.cantidad += 1;
+            } else {
+                state.cart.push({
+                    ...product,
+                    cantidad: 1
+                });
+            }
+            
+            saveState();
+            updateCart();
+            
+            // Feedback visual
+            const addedMessage = document.createElement('div');
+            addedMessage.textContent = 'Producto agregado al carrito';
+            addedMessage.style.position = 'fixed';
+            addedMessage.style.bottom = '20px';
+            addedMessage.style.right = '20px';
+            addedMessage.style.backgroundColor = 'var(--success-color)';
+            addedMessage.style.color = 'white';
+            addedMessage.style.padding = '10px 20px';
+            addedMessage.style.borderRadius = '5px';
+            addedMessage.style.zIndex = '1000';
+            
+            document.body.appendChild(addedMessage);
+            
+            setTimeout(() => {
+                document.body.removeChild(addedMessage);
+            }, 2000);
+        }
+
+        function updateCart() {
+            const cartContainer = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartContainer.innerHTML = '';
+            
+            if (state.cart.length === 0) {
+                cartContainer.innerHTML = '<div class="empty-cart">No hay productos en el carrito</div>';
+                cartTotal.textContent = '0.00';
+                return;
+            }
+            
+            let total = 0;
+            
+            state.cart.forEach(item => {
+                const subtotal = item.precio * item.cantidad;
+                total += subtotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <strong>${item.nombre}</strong><br>
+                        <small>Código: ${item.codigo} | $${formatCurrency(item.precio)} c/u</small>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="decrease-qty" data-id="${item.codigo}">-</button>
+                            <input type="number" min="1" value="${item.cantidad}" class="item-qty" data-id="${item.codigo}">
+                            <button class="increase-qty" data-id="${item.codigo}">+</button>
+                        </div>
+                        <div>$${formatCurrency(subtotal)}</div>
+                        <button class="danger remove-item" data-id="${item.codigo}">×</button>
+                    </div>
+                `;
+                
+                cartContainer.appendChild(cartItem);
+                
+                // Evento para modificar cantidad
+                const qtyInput = cartItem.querySelector(`.item-qty[data-id="${item.codigo}"]`);
+                qtyInput.addEventListener('change', (e) => {
+                    const newQty = parseInt(e.target.value);
+                    if (newQty < 1) {
+                        e.target.value = 1;
+                        item.cantidad = 1;
+                    } else {
+                        item.cantidad = newQty;
+                    }
+                    saveState();
+                    updateCart();
+                });
+                
+                // Eventos para botones + y -
+                cartItem.querySelector(`.decrease-qty[data-id="${item.codigo}"]`).addEventListener('click', () => {
+                    if (item.cantidad > 1) {
+                        item.cantidad--;
+                        saveState();
+                        updateCart();
+                    }
+                });
+                
+                cartItem.querySelector(`.increase-qty[data-id="${item.codigo}"]`).addEventListener('click', () => {
+                    item.cantidad++;
+                    saveState();
+                    updateCart();
+                });
+                
+                // Evento para eliminar item
+                cartItem.querySelector(`.remove-item[data-id="${item.codigo}"]`).addEventListener('click', () => {
+                    state.cart = state.cart.filter(cartItem => cartItem.codigo !== item.codigo);
+                    saveState();
+                    updateCart();
+                });
+            });
+            
+            cartTotal.textContent = formatCurrency(total);
+        }
+
+        function updateOrderHistory() {
+            const historyTableBody = document.getElementById('orderHistoryTableBody');
+            
+            historyTableBody.innerHTML = '';
+            
+            if (state.orders.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" style="text-align: center;">No hay pedidos registrados</td>`;
+                historyTableBody.appendChild(row);
+                return;
+            }
+            
+            state.orders.forEach((order, index) => {
+                const row = document.createElement('tr');
+                const orderDate = new Date(order.date);
+                
+                row.innerHTML = `
+                    <td>${orderDate.toLocaleDateString()} ${orderDate.toLocaleTimeString()}</td>
+                    <td>${order.client}</td>
+                    <td>$${formatCurrency(order.total)}</td>
+                    <td>
+                        <button class="view-order" data-index="${index}">Ver</button>
+                        <button class="repeat-order" data-index="${index}">Repetir</button>
+                    </td>
+                `;
+                
+                historyTableBody.appendChild(row);
+                
+                // Añadir eventos a los botones
+                row.querySelector(`.view-order[data-index="${index}"]`).addEventListener('click', () => {
+                    viewOrder(order);
+                });
+                
+                row.querySelector(`.repeat-order[data-index="${index}"]`).addEventListener('click', () => {
+                    repeatOrder(order);
+                });
+            });
+        }
+
+        function viewOrder(order) {
+            // Crear modal para ver detalles del pedido
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.backgroundColor = 'white';
+            modalContent.style.padding = '20px';
+            modalContent.style.borderRadius = '5px';
+            modalContent.style.width = '80%';
+            modalContent.style.maxWidth = '600px';
+            modalContent.style.maxHeight = '80vh';
+            modalContent.style.overflow = 'auto';
+            modalContent.style.position = 'relative';
+            
+            const orderDate = new Date(order.date);
+            
+            modalContent.innerHTML = `
+                <h2>Detalles del Pedido</h2>
+                <p><strong>Fecha:</strong> ${orderDate.toLocaleDateString()} ${orderDate.toLocaleTimeString()}</p>
+                <p><strong>Cliente:</strong> ${order.client}</p>
+                <p><strong>Teléfono:</strong> ${order.phone}</p>
+                <h3>Productos:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Producto</th>
+                            <th style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">Cantidad</th>
+                            <th style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">Precio</th>
+                            <th style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${order.items.map(item => `
+                            <tr>
+                                <td style="text-align: left; padding: 8px; border-bottom: 1px solid #eee;">${item.nombre} (${item.codigo})</td>
+                                <td style="text-align: right; padding: 8px; border-bottom: 1px solid #eee;">${item.cantidad}</td>
+                                <td style="text-align: right; padding: 8px; border-bottom: 1px solid #eee;">$${formatCurrency(item.precio)}</td>
+                                <td style="text-align: right; padding: 8px; border-bottom: 1px solid #eee;">$${formatCurrency(item.precio * item.cantidad)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; padding: 8px; font-weight: bold;">Total:</td>
+                            <td style="text-align: right; padding: 8px; font-weight: bold;">$${formatCurrency(order.total)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button id="closeModalBtn" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 3px; cursor: pointer;">Cerrar</button>
+                </div>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Evento para cerrar modal
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Cerrar modal al hacer clic fuera del contenido
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        function repeatOrder(order) {
+            // Limpiar carrito actual
+            state.cart = [];
+            
+            // Copiar items del pedido anterior al carrito
+            state.cart = order.items.map(item => ({...item}));
+            
+            // Actualizar campos del cliente
+            document.getElementById('clientName').value = order.client;
+            document.getElementById('clientPhone').value = order.phone;
+            
+            // Guardar estado y actualizar UI
+            saveState();
+            updateCart();
+            
+            // Cambiar a la pestaña de carrito
+            switchTab('carrito');
+        }
+
+        function sendWhatsAppOrder() {
+            const clientName = document.getElementById('clientName').value.trim();
+            const clientPhone = document.getElementById('clientPhone').value.trim();
+            
+            if (!clientName || !clientName) {
+                alert('Por favor ingrese el nombre y teléfono del cliente');
+                return;
+            }
+            
+            if (state.cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            
+            // Calcular total del pedido
+            const total = state.cart.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            // Crear mensaje para WhatsApp
+            let message = `*NUEVO PEDIDO*\n`;
+            message += `*Cliente:* ${clientName}\n\n`;
+            message += `*Productos:*\n`;
+            
+            state.cart.forEach(item => {
+                message += `• ${item.cantidad}x ${item.nombre} ($${formatCurrency(item.precio)} c/u): $${formatCurrency(item.precio * item.cantidad)}\n`;
+            });
+            
+            message += `\n*Total:* $${formatCurrency(total)}`;
+            
+            // Guardar pedido en historial
+            const newOrder = {
+                date: new Date().toISOString(),
+                client: clientName,
+                phone: clientPhone,
+                items: [...state.cart],
+                total: total
+            };
+            
+            state.orders.unshift(newOrder);
+            
+            // Limpiar carrito después de enviar el pedido
+            state.cart = [];
+            
+            // Guardar estado
+            saveState();
+            updateUI();
+            
+            // Codificar mensaje para URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Abrir WhatsApp
+            let phoneNumber = clientPhone.replace(/\D/g, '');
+            if (!phoneNumber.startsWith('+')) {
+                phoneNumber = '+' + phoneNumber;
+            }
+            
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        function switchTab(tabId) {
+            // Actualizar estado
+            state.activeTab = tabId;
+            
+            // Actualizar clases en pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Actualizar contenido visible
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function importExcel(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    
