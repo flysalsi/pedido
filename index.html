@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Preventa - Productos de Limpieza</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Preventa</h1>
+            <h2>Productos de Limpieza</h2>
+        </header>
+
+        <section id="pedido">
+            <h3>Pedido Actual</h3>
+            <div class="tabla-responsive">
+                <table id="tabla-pedido">
+                    <thead>
+                        <tr>
+                            <th>Rubro</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedido-body">
+                        <!-- Aquí se cargarán los productos del pedido -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-right"><strong>Total:</strong></td>
+                            <td id="total-pedido">$0.00</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="datos-cliente">
+                <h4>Datos para el envío</h4>
+                <div class="form-group">
+                    <label for="nombre-cliente">Nombre:</label>
+                    <input type="text" id="nombre-cliente" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono-cliente">Teléfono (con código de país):</label>
+                    <input type="text" id="telefono-cliente" placeholder="Ej: +5491112345678" required>
+                </div>
+                <div class="form-group">
+                    <label for="direccion-cliente">Dirección de entrega:</label>
+                    <input type="text" id="direccion-cliente" required>
+                </div>
+            </div>
+
+            <div class="acciones-pedido">
+                <button id="enviar-whatsapp" class="btn btn-primary">Enviar por WhatsApp</button>
+                <button id="vaciar-pedido" class="btn btn-secondary">Vaciar Pedido</button>
+            </div>
+        </section>
+        <!-- <section id="carga-archivo">
+            <h3>Actualizar Catálogo</h3>
+            <div class="file-upload">
+                <input type="file" id="excel-file" accept=".xlsx, .xls, .csv">
+                <label for="excel-file">Seleccionar archivo Excel</label>
+            </div>
+            <button id="cargar-excel" class="btn">Cargar Productos</button>
+        </section> -->
+
+        <section id="filtros">
+            <h3>Filtros</h3>
+            <div class="filtros-container">
+                <div class="filtro">
+                    <label for="filtro-rubro">Rubro:</label>
+                    <select id="filtro-rubro">
+                        <option value="todos">Todos</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <label for="busqueda">Buscar:</label>
+                    <input type="text" id="busqueda" placeholder="Nombre o código">
+                </div>
+            </div>
+        </section>
+
+        <section id="catalogo">
+            <h3>Catálogo de Productos</h3>
+            <div class="tabla-responsive">
+                <table id="tabla-productos">
+                    <thead>
+                        <tr>
+                            <th>Rubro</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-body">
+                        <!-- Aquí se cargarán los productos dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
