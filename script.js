@@ -3,47 +3,8 @@ let catalogo = [];
 let pedidoActual = [];
 let rubrosDisponibles = new Set();
 
-function cargarCatalogoInicial() {
-    // 1. Limpiar cualquier dato previo en localStorage
-    localStorage.removeItem('catalogoProductos');
-    
-    // 2. Cargar directamente desde el archivo JSON
-    fetch('catalogo_productos.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Validar estructura del JSON recibido
-            if (!data) {
-                throw new Error('El archivo JSON está vacío');
-            }
-            
-            // Manejar tanto array directo como objeto con propiedad 'productos'
-            catalogo = Array.isArray(data) ? data : data.productos || [];
-            
-            // Opcional: Si quieres evitar completamente el almacenamiento local,
-            // eliminamos estas líneas que guardarían en localStorage
-            // localStorage.setItem('catalogoProductos', JSON.stringify(catalogo));
-            
-            procesarCatalogo();
-        })
-        .catch(error => {
-            console.error('Error al cargar catálogo:', error);
-            mostrarMensaje('Error al cargar productos. Intente recargar la página.', 'error');
-            
-            // Opcional: Cargar datos de respaldo si existen
-            if (typeof catalogoBackup !== 'undefined') {
-                catalogo = catalogoBackup;
-                procesarCatalogo();
-                mostrarMensaje('Mostrando datos de respaldo', 'warning');
-            }
-        });
-}
 // Función para cargar el catálogo inicial desde el archivo JSON
-function cargarCatalogoInicial_ori() {
+function cargarCatalogoInicial() {
     // Intentar cargar primero del localStorage
     const catalogoGuardado = localStorage.getItem('catalogoProductos');
     
@@ -475,4 +436,127 @@ document.addEventListener('DOMContentLoaded', function() {
     // Eventos para botones del pedido
     document.getElementById('enviar-whatsapp').addEventListener('click', enviarPedidoPorWhatsApp);
     document.getElementById('vaciar-pedido').addEventListener('click', vaciarPedido);
+});
+// Agregar este código al final del evento DOMContentLoaded en script.js
+
+// Crear un clon de la sección de filtros para hacerla fija
+function crearFiltrosFijos() {
+    const filtrosOriginales = document.getElementById('filtros');
+    
+    // Crear el contenedor para los filtros fijos
+    const filtrosFijos = document.createElement('div');
+    filtrosFijos.className = 'filtros-fijos';
+    filtrosFijos.id = 'filtros-fijos';
+    
+    // Clonar el contenido de los filtros
+    filtrosFijos.innerHTML = filtrosOriginales.innerHTML;
+    
+    // Agregar al body
+    document.body.appendChild(filtrosFijos);
+    
+    // Crear espacio adicional para evitar saltos de contenido
+    const espacioFiltros = document.createElement('div');
+    espacioFiltros.className = 'filtros-fijos-espacio';
+    espacioFiltros.id = 'filtros-fijos-espacio';
+    
+    // Insertar antes del catálogo
+    const catalogoSeccion = document.getElementById('catalogo');
+    catalogoSeccion.parentNode.insertBefore(espacioFiltros, catalogoSeccion);
+    
+    // Configurar eventos para los nuevos filtros
+    const nuevoFiltroRubro = filtrosFijos.querySelector('#filtro-rubro');
+    const nuevoBusqueda = filtrosFijos.querySelector('#busqueda');
+    
+    nuevoFiltroRubro.id = 'filtro-rubro-fijo';
+    nuevoBusqueda.id = 'busqueda-fijo';
+    
+    // Sincronizar filtros
+    nuevoFiltroRubro.addEventListener('change', function() {
+        const filtroOriginal = document.getElementById('filtro-rubro');
+        filtroOriginal.value = this.value;
+        filtroOriginal.dispatchEvent(new Event('change'));
+    });
+    
+    nuevoBusqueda.addEventListener('input', function() {
+        const busquedaOriginal = document.getElementById('busqueda');
+        busquedaOriginal.value = this.value;
+        busquedaOriginal.dispatchEvent(new Event('input'));
+    });
+
+    // También sincronizar en dirección opuesta
+    const filtroOriginal = document.getElementById('filtro-rubro');
+    filtroOriginal.addEventListener('change', function() {
+        nuevoFiltroRubro.value = this.value;
+    });
+    
+    const busquedaOriginal = document.getElementById('busqueda');
+    busquedaOriginal.addEventListener('input', function() {
+        nuevoBusqueda.value = this.value;
+    });
+}
+
+// Función para controlar la visibilidad de los filtros fijos
+function controlarFiltrosFijos() {
+    const filtrosFijos = document.getElementById('filtros-fijos');
+    const espacioFiltros = document.getElementById('filtros-fijos-espacio');
+    const catalogoSeccion = document.getElementById('catalogo');
+    const pedidoSeccion = document.getElementById('pedido');
+    const rectCatalogo = catalogoSeccion.getBoundingClientRect();
+    const rectPedido = pedidoSeccion.getBoundingClientRect();
+    
+    // Mostrar filtros cuando:
+    // 1. El catálogo está visible (parte superior ya pasó el viewport)
+    // 2. Y el pedido aún no es visible (parte superior no ha entrado en viewport)
+    if (rectCatalogo.top < 0 && rectPedido.top > 0) {
+        filtrosFijos.classList.add('visible');
+        espacioFiltros.classList.add('visible');
+    } else {
+        filtrosFijos.classList.remove('visible');
+        espacioFiltros.classList.remove('visible');
+    }
+}
+
+// Crear filtros fijos y configurar evento de scroll
+crearFiltrosFijos();
+window.addEventListener('scroll', controlarFiltrosFijos);
+// Agrega este código al final del archivo script.js, dentro del evento DOMContentLoaded
+
+// Botón flotante de navegación
+const toggleFloatingNav = document.getElementById('toggle-floating-nav');
+const floatingNavMenu = document.getElementById('floating-nav-menu');
+
+toggleFloatingNav.addEventListener('click', function() {
+    floatingNavMenu.classList.toggle('active');
+    this.classList.toggle('active');
+});
+
+// Cerrar el menú al hacer clic en un enlace
+document.querySelectorAll('.floating-nav-menu a').forEach(link => {
+    link.addEventListener('click', function() {
+        floatingNavMenu.classList.remove('active');
+        toggleFloatingNav.classList.remove('active');
+        
+        // Pequeño retraso para el scroll suave
+        setTimeout(() => {
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // Scroll suave a la sección
+                window.scrollTo({
+                    top: targetElement.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    });
+});
+
+// Cerrar el menú al hacer clic fuera
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.floating-nav-button') && 
+        floatingNavMenu.classList.contains('active')) {
+        floatingNavMenu.classList.remove('active');
+        toggleFloatingNav.classList.remove('active');
+    }
 });

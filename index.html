@@ -9,9 +9,55 @@
 <body>
     <div class="container">
         <header>
-            <h1>Sistema de Preventa</h1>
+            <h1> Pedidos x wathsapp</h1>
             <h2>Productos de Limpieza</h2>
         </header>
+
+       <!-- <section id="carga-archivo">
+            <h3>Actualizar Catálogo</h3>
+            <div class="file-upload">
+                <input type="file" id="excel-file" accept=".xlsx, .xls, .csv">
+                <label for="excel-file">Seleccionar archivo Excel</label>
+            </div>
+            <button id="cargar-excel" class="btn">Cargar Productos</button>
+        </section>-->
+
+        <section id="filtros">
+            <h3>Filtros</h3>
+            <div class="filtros-container">
+                <div class="filtro">
+                    <label for="filtro-rubro">Rubro:</label>
+                    <select id="filtro-rubro">
+                        <option value="todos">Todos</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <label for="busqueda">Buscar:</label>
+                    <input type="text" id="busqueda" placeholder="Nombre o código">
+                </div>
+            </div>
+        </section>
+
+        <section id="catalogo">
+            <h3>Catálogo de Productos</h3>
+            <div class="tabla-responsive">
+                <table id="tabla-productos">
+                    <thead>
+                        <tr>
+                            <th>Rubro</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-body">
+                        <!-- Aquí se cargarán los productos dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
         <section id="pedido">
             <h3>Pedido Actual</h3>
@@ -62,54 +108,20 @@
                 <button id="vaciar-pedido" class="btn btn-secondary">Vaciar Pedido</button>
             </div>
         </section>
-        <!-- <section id="carga-archivo">
-            <h3>Actualizar Catálogo</h3>
-            <div class="file-upload">
-                <input type="file" id="excel-file" accept=".xlsx, .xls, .csv">
-                <label for="excel-file">Seleccionar archivo Excel</label>
-            </div>
-            <button id="cargar-excel" class="btn">Cargar Productos</button>
-        </section> -->
-
-        <section id="filtros">
-            <h3>Filtros</h3>
-            <div class="filtros-container">
-                <div class="filtro">
-                    <label for="filtro-rubro">Rubro:</label>
-                    <select id="filtro-rubro">
-                        <option value="todos">Todos</option>
-                    </select>
-                </div>
-                <div class="filtro">
-                    <label for="busqueda">Buscar:</label>
-                    <input type="text" id="busqueda" placeholder="Nombre o código">
-                </div>
-            </div>
-        </section>
-
-        <section id="catalogo">
-            <h3>Catálogo de Productos</h3>
-            <div class="tabla-responsive">
-                <table id="tabla-productos">
-                    <thead>
-                        <tr>
-                            <th>Rubro</th>
-                            <th>Código</th>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productos-body">
-                        <!-- Aquí se cargarán los productos dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        
     </div>
+
+    <!-- Agrega esto al final del body en index.html, justo antes de los scripts -->
+<div class="floating-nav-button">
+    <button id="toggle-floating-nav" class="btn-float">
+        <span>≡</span>
+    </button>
+    <div class="floating-nav-menu" id="floating-nav-menu">
+<!--        <a href="#carga-archivo">Actualizar Catálogo</a>-->
+        <a href="#filtros">Filtros</a>
+        <a href="#catalogo">Catálogo de Productos</a>
+        <a href="#pedido">Pedido Actual</a>
+    </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="script.js"></script>
