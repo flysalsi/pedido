@@ -560,3 +560,142 @@ document.addEventListener('click', function(event) {
         toggleFloatingNav.classList.remove('active');
     }
 });
+
+// Agregar esto al final del archivo script.js
+
+// Función para detectar si es dispositivo móvil
+function esDispositivoMovil() {
+    return window.innerWidth <= 768;
+}
+
+// Función para mostrar productos en formato adaptado para móviles
+function mostrarProductosFormatoMovil(productosFiltrados) {
+    const contenedor = document.getElementById('productos-mobile-container');
+    
+    // Si no existe el contenedor, créalo
+    if (!contenedor) {
+        // Crear contenedor para vista móvil
+        const mobileContainer = document.createElement('div');
+        mobileContainer.id = 'productos-mobile-container';
+        mobileContainer.className = 'tabla-productos-mobile';
+        
+        // Insertar después de la tabla original
+        const tablaOriginal = document.getElementById('tabla-productos');
+        tablaOriginal.parentNode.insertBefore(mobileContainer, tablaOriginal.nextSibling);
+    }
+    
+    // Limpiar el contenedor
+    contenedor.innerHTML = '';
+    
+    if (productosFiltrados.length === 0) {
+        contenedor.innerHTML = '<div class="producto-card"><p style="text-align: center;">No se encontraron productos</p></div>';
+        return;
+    }
+    
+    // Crear tarjetas para cada producto
+    productosFiltrados.forEach(producto => {
+        // Encontrar si el producto ya está en el pedido
+        const enPedido = pedidoActual.find(item => item.Codigo === producto.Codigo);
+        const cantidadActual = enPedido ? enPedido.cantidad : 0;
+        
+        const productoCard = document.createElement('div');
+        productoCard.className = 'producto-card';
+        
+        productoCard.innerHTML = `
+            <div class="producto-card-header">
+                <span class="producto-codigo">Cód: ${producto.Codigo}</span>
+                <span class="producto-rubro">${producto.Rubro}</span>
+            </div>
+            <div class="producto-nombre">${producto.Nombre}</div>
+            <div class="producto-precio">$${parseFloat(producto.Precio).toFixed(2)}</div>
+            <div class="producto-acciones">
+                <input type="number" class="cantidad-input" value="${cantidadActual}" min="0">
+                <button class="btn btn-small agregar-producto-mobile" data-codigo="${producto.Codigo}">
+                    ${cantidadActual > 0 ? 'Actualizar' : 'Agregar'}
+                </button>
+            </div>
+        `;
+        
+        contenedor.appendChild(productoCard);
+    });
+    
+    // Agregar eventos a los botones de agregar en vista móvil
+    document.querySelectorAll('.agregar-producto-mobile').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const codigo = this.getAttribute('data-codigo');
+            const cantidadInput = this.closest('.producto-card').querySelector('.cantidad-input');
+            const cantidad = parseInt(cantidadInput.value);
+            
+            if (cantidad > 0) {
+                agregarProductoAlPedido(codigo, cantidad);
+                this.textContent = 'Actualizar';
+            } else {
+                eliminarProductoDelPedido(codigo);
+                this.textContent = 'Agregar';
+            }
+        });
+    });
+}
+
+// Sobrescribir la función mostrarProductosEnTabla para que use la vista móvil si corresponde
+const mostrarProductosEnTablaOriginal = mostrarProductosEnTabla;
+
+mostrarProductosEnTabla = function(filtroRubro = 'todos', textoBusqueda = '') {
+    // Obtener productos filtrados
+    const productosFiltrados = catalogo.filter(producto => {
+        const coincideRubro = filtroRubro === 'todos' || producto.Rubro === filtroRubro;
+        const coincideBusqueda = textoBusqueda === '' || 
+            producto.Nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) || 
+            producto.Codigo.toString().toLowerCase().includes(textoBusqueda.toLowerCase());
+        
+        return coincideRubro && coincideBusqueda;
+    });
+    
+    // Usar la función original para la vista escritorio
+    mostrarProductosEnTablaOriginal(filtroRubro, textoBusqueda);
+    
+    // Si es móvil, mostrar vista alternativa
+    if (esDispositivoMovil()) {
+        mostrarProductosFormatoMovil(productosFiltrados);
+    }
+};
+
+// Verificar tamaño de pantalla al cargar y al redimensionar
+function verificarTamañoPantalla() {
+    const tablaOriginal = document.getElementById('tabla-productos');
+    const contenedorMobile = document.getElementById('productos-mobile-container');
+    
+    if (esDispositivoMovil()) {
+        if (tablaOriginal) tablaOriginal.style.display = 'none';
+        if (contenedorMobile) contenedorMobile.style.display = 'block';
+        
+        // Si ya tenemos productos, mostrarlos en formato móvil
+        if (catalogo.length > 0) {
+            const filtroRubro = document.getElementById('filtro-rubro').value;
+            const textoBusqueda = document.getElementById('busqueda').value;
+            
+            const productosFiltrados = catalogo.filter(producto => {
+                const coincideRubro = filtroRubro === 'todos' || producto.Rubro === filtroRubro;
+                const coincideBusqueda = textoBusqueda === '' || 
+                    producto.Nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) || 
+                    producto.Codigo.toString().toLowerCase().includes(textoBusqueda.toLowerCase());
+                
+                return coincideRubro && coincideBusqueda;
+            });
+            
+            mostrarProductosFormatoMovil(productosFiltrados);
+        }
+    } else {
+        if (tablaOriginal) tablaOriginal.style.display = 'table';
+        if (contenedorMobile) contenedorMobile.style.display = 'none';
+    }
+}
+
+// Añadir evento resize
+window.addEventListener('resize', verificarTamañoPantalla);
+
+// Verificar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Añadir esto al final del DOMContentLoaded existente
+    verificarTamañoPantalla();
+});

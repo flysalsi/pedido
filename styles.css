@@ -339,3 +339,189 @@ tbody tr:hover {
         height: 140px; /* Más espacio en móviles porque los filtros ocupan más */
     }
 }
+
+/* Agregar estos estilos al final de styles.css */
+
+/* Mejoras generales para responsividad */
+html {
+    font-size: 16px; /* Tamaño base para escritorio */
+}
+
+/* Ajustes para tablets */
+@media (max-width: 992px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+/* Ajustes para móviles grandes */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    h3 {
+        font-size: 1.3rem;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    section {
+        padding: 15px;
+    }
+}
+
+/* Ajustes para móviles pequeños */
+@media (max-width: 480px) {
+    html {
+        font-size: 13px;
+    }
+    
+    /* Hacer títulos más compactos */
+    header {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+        margin: 0;
+    }
+    
+    h2 {
+        font-size: 1.3rem;
+        margin: 0;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    section {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Mejoras para la tabla en dispositivos móviles */
+@media (max-width: 768px) {
+    /* Vista alternativa para tablas en móviles */
+    .tabla-productos-mobile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .producto-card {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        padding: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .producto-card-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 6px;
+    }
+    
+    .producto-codigo {
+        font-weight: bold;
+        color: #0078d7;
+    }
+    
+    .producto-rubro {
+        color: #666;
+        font-size: 0.9rem;
+        background-color: #f8f8f8;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+    
+    .producto-nombre {
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    
+    .producto-precio {
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 12px;
+        font-size: 1.2rem;
+    }
+    
+    .producto-acciones {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .cantidad-input {
+        width: 80px;
+        padding: 8px;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+    
+    /* Ocultar tabla original en móviles */
+    #tabla-productos {
+        display: none;
+    }
+    
+    /* Mostrar vista alternativa */
+    .tabla-productos-mobile {
+        display: block;
+    }
+    
+    /* Ajustes para la tabla de pedido */
+    #tabla-pedido {
+        font-size: 0.9rem;
+    }
+    
+    #tabla-pedido th, #tabla-pedido td {
+        padding: 8px 6px;
+    }
+}
+
+/* Botón de agregar más visible en móviles */
+@media (max-width: 480px) {
+    .btn {
+        padding: 10px 12px;
+        font-size: 1rem;
+    }
+    
+    .btn-small {
+        padding: 8px 10px;
+    }
+    
+    .producto-acciones .btn {
+        flex: 1;
+        margin-left: 10px;
+    }
+}
+
+/* Zoom en los campos de entrada para móviles (iOS) */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="tel"],
+    select {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+}
