@@ -413,16 +413,19 @@ html {
         margin-bottom: 15px;
     }
 }
-
-/* Mejoras para la tabla en dispositivos móviles */
 @media (max-width: 768px) {
-    /* Vista alternativa para tablas en móviles */
+    /* Ocultar tabla original en móviles */
+    #tabla-productos {
+        display: none;
+    }
+    
+    /* Mostrar vista alternativa */
     .tabla-productos-mobile {
-        display: flex;
-        flex-direction: column;
+        display: block;
         width: 100%;
     }
     
+    /* Estilos para las tarjetas de productos */
     .producto-card {
         background-color: #fff;
         border: 1px solid #e0e0e0;
@@ -473,29 +476,28 @@ html {
     }
     
     .cantidad-input {
-        width: 80px;
+        width: 60px;
         padding: 8px;
         text-align: center;
-        font-size: 1.1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
     }
     
-    /* Ocultar tabla original en móviles */
-    #tabla-productos {
-        display: none;
-    }
-    
-    /* Mostrar vista alternativa */
-    .tabla-productos-mobile {
-        display: block;
-    }
-    
-    /* Ajustes para la tabla de pedido */
+    /* Ajustes para la tabla de pedido en móviles */
     #tabla-pedido {
         font-size: 0.9rem;
     }
     
-    #tabla-pedido th, #tabla-pedido td {
+    #tabla-pedido th, 
+    #tabla-pedido td {
         padding: 8px 6px;
+    }
+    
+    /* Mejora para botones en móviles */
+    .agregar-producto-mobile {
+        padding: 8px 12px;
+        font-size: 0.9rem;
     }
 }
 
