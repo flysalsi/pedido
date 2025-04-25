@@ -525,3 +525,8 @@ html {
         font-size: 16px; /* Evita zoom en iOS */
     }
 }
+
+.btn-actualizar {
+    background-color: #28a745 !important;
+    color: white !important;
+}

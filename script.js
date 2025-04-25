@@ -156,6 +156,7 @@ function agregarProductoAlPedido(codigo, cantidad) {
     const boton = document.querySelector(`.agregar-producto[data-codigo="${codigo}"]`);
     if (boton) {
         boton.textContent = 'Actualizar';
+/*        boton.classList.add('btn-actualizar');*/
     }
 }
 
@@ -170,6 +171,7 @@ function eliminarProductoDelPedido(codigo) {
     const boton = document.querySelector(`.agregar-producto[data-codigo="${codigo}"]`);
     if (boton) {
         boton.textContent = 'Agregar';
+/*        boton.classList.remove('btn-actualizar');*/
         const cantidadInput = boton.closest('tr').querySelector('.cantidad-input');
         cantidadInput.value = 0;
     }
@@ -220,6 +222,7 @@ function actualizarTablaPedido() {
             eliminarProductoDelPedido(codigo);
         });
     });
+      setTimeout(fixMobileNumericKeyboard, 100);
 }
 
 // Guardar catálogo en localStorage
@@ -362,6 +365,7 @@ function vaciarPedido() {
         // Actualizar textos de botones
         document.querySelectorAll('.agregar-producto').forEach(btn => {
             btn.textContent = 'Agregar';
+/*            btn.classList.remove('btn-actualizar');*/
         });
     }
 }
@@ -426,16 +430,19 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('filtro-rubro').addEventListener('change', function() {
         const textoBusqueda = document.getElementById('busqueda').value;
         mostrarProductosEnTabla(this.value, textoBusqueda);
+        setTimeout(fixMobileNumericKeyboard, 100);
     });
     
     document.getElementById('busqueda').addEventListener('input', function() {
         const filtroRubro = document.getElementById('filtro-rubro').value;
         mostrarProductosEnTabla(filtroRubro, this.value);
+        setTimeout(fixMobileNumericKeyboard, 100);
     });
     
     // Eventos para botones del pedido
     document.getElementById('enviar-whatsapp').addEventListener('click', enviarPedidoPorWhatsApp);
     document.getElementById('vaciar-pedido').addEventListener('click', vaciarPedido);
+    setTimeout(fixMobileNumericKeyboard, 500);
 });
 // Agregar este código al final del evento DOMContentLoaded en script.js
 
@@ -629,9 +636,13 @@ function mostrarProductosFormatoMovil(productosFiltrados) {
             if (cantidad > 0) {
                 agregarProductoAlPedido(codigo, cantidad);
                 this.textContent = 'Actualizar';
+                 // Agregar clase para el estilo de actualización
+/*                this.classList.add('btn-actualizar');*/
             } else {
                 eliminarProductoDelPedido(codigo);
                 this.textContent = 'Agregar';
+                 // Remover clase de actualización
+            /*this.classList.remove('btn-actualizar');*/
             }
         });
     });
@@ -657,6 +668,7 @@ mostrarProductosEnTabla = function(filtroRubro = 'todos', textoBusqueda = '') {
     // Si es móvil, mostrar vista alternativa
     if (esDispositivoMovil()) {
         mostrarProductosFormatoMovil(productosFiltrados);
+        fixMobileNumericKeyboard();
     }
 };
 
@@ -684,6 +696,7 @@ function verificarTamañoPantalla() {
             });
             
             mostrarProductosFormatoMovil(productosFiltrados);
+            fixMobileNumericKeyboard();
         }
     } else {
         if (tablaOriginal) tablaOriginal.style.display = 'table';
@@ -699,3 +712,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // Añadir esto al final del DOMContentLoaded existente
     verificarTamañoPantalla();
 });
+
+// Función para arreglar el problema del teclado numérico en Android
+function fixMobileNumericKeyboard() {
+    // Seleccionar todos los inputs numéricos en la vista móvil
+    const numericInputs = document.querySelectorAll('.cantidad-input');
+    
+    numericInputs.forEach(input => {
+        // Prevenir el comportamiento por defecto del focus/click en los inputs
+        input.addEventListener('click', function(e) {
+            // Prevenir que se cierre el teclado
+            e.preventDefault();
+            
+            // Mantener el input enfocado
+            this.focus();
+            
+            // Asegurarse de que el tipo de teclado sea numérico
+            this.setAttribute('inputmode', 'numeric');
+            
+            // Para Android necesitamos este truco para mantener el teclado abierto
+            setTimeout(() => {
+                // Reposicionar el cursor al final del texto
+                const value = this.value;
+                this.value = '';
+                this.value = value;
+                
+                // Seleccionar todo el texto (mejor UX)
+                this.select();
+            }, 10);
+        });
+        
+        // Asegurarse de que el teclado sea numérico
+        input.setAttribute('inputmode', 'numeric');
+        
+        // Otra solución común es usar pattern para invocar teclado numérico
+        input.setAttribute('pattern', '[0-9]*');
+    });
+}
